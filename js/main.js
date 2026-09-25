@@ -7,11 +7,16 @@
 
   /* ---------- Preloader ---------- */
   const preloader = document.getElementById("preloader");
-  window.addEventListener("load", () => {
-    setTimeout(() => preloader.classList.add("hidden"), 400);
-  });
+  let preloaderDone = false;
+  const finishPreloader = () => {
+    if (preloaderDone) return;
+    preloaderDone = true;
+    document.body.classList.add("loaded");
+    preloader.classList.add("hidden");
+  };
+  window.addEventListener("load", () => setTimeout(finishPreloader, 900));
   // Safety fallback
-  setTimeout(() => preloader.classList.add("hidden"), 3500);
+  setTimeout(finishPreloader, 3200);
 
   /* ---------- Custom cursor (fine pointers only) ---------- */
   const dot = document.getElementById("cursorDot");
@@ -138,7 +143,7 @@
   const io = new IntersectionObserver(
     (entries, obs) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && document.body.classList.contains("loaded")) {
           entry.target.classList.add("visible");
           obs.unobserve(entry.target);
         }
